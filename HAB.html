@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="ms" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PROGRAM PENDIDIKAN MASYARAKAT ORANG ASLI 2025</title>
+    <!-- Chosen Palette: Distinct Palettes (Blue, Purple, Amber) -->
+    <!-- Application Structure Plan: A single-page application (SPA) with a main tab-based navigation. The order is PRO-KOMOA, DIDIK JAYA, AKAR ILMU, and finally Comparison. This flow allows stakeholders to understand each program individually before seeing the comparative analysis. Each program page now includes a visual timeline and a unique color scheme to enhance distinction and professionalism. -->
+    <!-- Visualization & Content Choices:
+        - Timelines: Visual flow diagrams for each program (HTML/CSS). Goal: Organize/Show Process. Justification: Provides a clear, scannable schedule for each proposal.
+        - Comparison Page: Uses cards and a bar chart (Chart.js/Canvas) to compare key metrics. Goal: Compare. Justification: The most direct method for evaluation.
+        - Budget Breakdowns: Doughnut charts (Chart.js/Canvas) for each program. Goal: Compare Composition. Justification: Offers financial transparency for each option.
+        - Navigation: JavaScript-driven tab system for a seamless SPA experience.
+        - CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+        .chart-container { position: relative; height: 350px; max-height: 60vh; width: 100%; max-width: 700px; margin: auto; }
+        .doughnut-container { position: relative; height: 350px; max-height: 60vh; width: 100%; max-width: 450px; margin: auto; }
+        .nav-button { transition: all 0.3s; }
+        .nav-button.active { background-color: #1E293B; color: white; transform: translateY(-2px); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); }
+        .card-program { transition: transform 0.3s, box-shadow 0.3s; }
+        .card-program:hover { transform: translateY(-5px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); }
+        .timeline-item::before {
+            content: ''; position: absolute; left: 19px; top: 40px; bottom: -20px; width: 2px; background-color: #E2E8F0;
+        }
+        .timeline-item:last-child::before { display: none; }
+    </style>
+</head>
+<body class="text-slate-800">
+
+    <header class="bg-white/90 backdrop-blur-lg sticky top-0 z-50 shadow-md border-b border-slate-200">
+        <div class="container mx-auto px-6 py-4">
+            <h1 class="text-2xl font-bold text-center text-slate-900">Portal Program Intervensi Pendidikan</h1>
+            <nav id="main-nav" class="mt-4 flex flex-wrap justify-center gap-2">
+                <button data-target="page-pro-komoa" class="nav-button active font-semibold py-2 px-4 rounded-lg bg-slate-200 text-slate-700">PRO-KOMOA</button>
+                <button data-target="page-didik-jaya" class="nav-button font-semibold py-2 px-4 rounded-lg bg-slate-200 text-slate-700">DIDIK JAYA</button>
+                <button data-target="page-akar-ilmu" class="nav-button font-semibold py-2 px-4 rounded-lg bg-slate-200 text-slate-700">AKAR ILMU</button>
+                <button data-target="page-comparison" class="nav-button font-semibold py-2 px-4 rounded-lg bg-slate-200 text-slate-700">Perbandingan Program</button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-8">
+
+        <!-- PAGE 1: PRO-KOMOA (Blue Theme) -->
+        <section id="page-pro-komoa" class="page-content">
+            <header class="text-center my-8">
+                <h2 class="text-4xl font-bold text-slate-900 leading-tight">Butiran Program PRO-KOMOA</h2>
+                <p class="mt-4 max-w-3xl mx-auto text-lg text-slate-600">Model intervensi pantas untuk meningkatkan kelulusan SPM tahun semasa.</p>
+            </header>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+                <div class="bg-white p-8 rounded-2xl shadow-xl border space-y-6">
+                    <h3 class="text-2xl font-bold text-blue-600 mb-4">Ringkasan Program</h3>
+                    <ul class="space-y-4">
+                        <li class="flex items-start"><span class="text-2xl mr-4">🎯</span><div><strong>Fokus:</strong> Tindakan Segera (Urgent Intervention)</div></li>
+                        <li class="flex items-start"><span class="text-2xl mr-4">👥</span><div><strong>Sasaran:</strong> 180 Pelajar Tingkatan 5</div></li>
+                        <li class="flex items-start"><span class="text-2xl mr-4">📚</span><div><strong>Subjek Teras:</strong> Bahasa Melayu & Sejarah</div></li>
+                        <li class="flex items-start"><span class="text-2xl mr-4">👩‍🏫</span><div><strong>Tenaga Pengajar:</strong> Guru sedia ada di sekolah</div></li>
+                        <li class="flex items-start"><span class="text-2xl mr-4">⏳</span><div><strong>Tempoh:</strong> 2 Bulan (Intensif)</div></li>
+                    </ul>
+                </div>
+                <div class="bg-white p-8 rounded-2xl shadow-xl border">
+                    <h3 class="text-2xl font-bold text-blue-600 mb-4">Belanjawan: RM 34,740</h3>
+                    <div class="doughnut-container"><canvas id="proKomoaBudgetChart"></canvas></div>
+                </div>
+                <div class="lg:col-span-2 bg-white p-8 rounded-2xl shadow-xl border">
+                    <h3 class="text-2xl font-bold text-blue-600 mb-6">Garis Masa Pelaksanaan</h3>
+                    <div class="relative">
+                        <div class="timeline-item relative pb-8">
+                            <div class="flex items-center"><div class="flex-shrink-0 w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold z-10">1</div><div class="ml-4"><h4 class="text-xl font-bold">Bulan 1</h4><p class="text-slate-600">Sesi tuisyen intensif, memfokuskan topik-topik kritikal dan sukar.</p></div></div>
+                        </div>
+                        <div class="timeline-item relative">
+                            <div class="flex items-center"><div class="flex-shrink-0 w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold z-10">2</div><div class="ml-4"><h4 class="text-xl font-bold">Bulan 2</h4><p class="text-slate-600">Latih tubi berfokus, bengkel teknik menjawab, dan persediaan akhir peperiksaan.</p></div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PAGE 2: DIDIK JAYA (Purple Theme) -->
+        <section id="page-didik-jaya" class="page-content hidden">
+            <header class="text-center my-8">
+                <h2 class="text-4xl font-bold text-slate-900 leading-tight">Butiran Program DIDIK JAYA</h2>
+                <p class="mt-4 max-w-3xl mx-auto text-lg text-slate-600">Model seimbang yang menggabungkan pembangunan guru dan intervensi pelajar Tingkatan 5.</p>
+            </header>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+                <div class="bg-white p-8 rounded-2xl shadow-xl border space-y-6">
+                    <h3 class="text-2xl font-bold text-purple-600 mb-4">Ringkasan Program</h3>
+                    <ul class="space-y-4">
+                        <li class="flex items-start"><span class="text-2xl mr-4">🎯</span><div><strong>Fokus:</strong> Impak Berganda (Guru & Pelajar)</div></li>
+                        <li class="flex items-start"><span class="text-2xl mr-4">👥</span><div><strong>Sasaran:</strong> 12 Guru & 180 Pelajar Tingkatan 5</div></li>
+                        <li class="flex items-start"><span class="text-2xl mr-4">📚</span><div><strong>Subjek Teras:</strong> Bahasa Melayu & Sejarah</div></li>
+                        <li class="flex items-start"><span class="text-2xl mr-4">👩‍🏫</span><div><strong>Tenaga Pengajar:</strong> Guru yang dilatih khas (Guru Pembimbing)</div></li>
+                        <li class="flex items-start"><span class="text-2xl mr-4">⏳</span><div><strong>Tempoh:</strong> 2 Bulan (Intensif)</div></li>
+                    </ul>
+                </div>
+                <div class="bg-white p-8 rounded-2xl shadow-xl border">
+                    <h3 class="text-2xl font-bold text-purple-600 mb-4">Belanjawan: RM 39,360</h3>
+                    <div class="doughnut-container"><canvas id="didikJayaBudgetChart"></canvas></div>
+                </div>
+                 <div class="lg:col-span-2 bg-white p-8 rounded-2xl shadow-xl border">
+                    <h3 class="text-2xl font-bold text-purple-600 mb-6">Garis Masa Pelaksanaan</h3>
+                    <div class="relative">
+                        <div class="timeline-item relative pb-8">
+                            <div class="flex items-center"><div class="flex-shrink-0 w-10 h-10 rounded-full bg-purple-600 text-white flex items-center justify-center font-bold z-10">1</div><div class="ml-4"><h4 class="text-xl font-bold">Awal Bulan 1</h4><p class="text-slate-600">Bengkel Latihan Guru (ToT) selama 2 hari untuk 12 guru terpilih.</p></div></div>
+                        </div>
+                        <div class="timeline-item relative">
+                            <div class="flex items-center"><div class="flex-shrink-0 w-10 h-10 rounded-full bg-purple-600 text-white flex items-center justify-center font-bold z-10">2</div><div class="ml-4"><h4 class="text-xl font-bold">Bulan 1 & 2</h4><p class="text-slate-600">Sesi tuisyen intensif dikendalikan oleh guru terlatih, dengan pemantauan PLC (Professional Learning Community) secara berkala.</p></div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PAGE 3: AKAR ILMU (Amber/Orange Theme) -->
+        <section id="page-akar-ilmu" class="page-content hidden">
+            <header class="text-center my-8">
+                <h2 class="text-4xl font-bold text-slate-900 leading-tight">Butiran Program AKAR ILMU</h2>
+                <p class="mt-4 max-w-3xl mx-auto text-lg text-slate-600">Model intervensi awal yang proaktif untuk membina asas pelajar Tingkatan 4 secara mampan.</p>
+            </header>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+                <div class="bg-white p-8 rounded-2xl shadow-xl border space-y-6">
+                    <h3 class="text-2xl font-bold text-amber-600 mb-4">Ringkasan Program</h3>
+                     <ul class="space-y-4">
+                        <li class="flex items-start"><span class="text-2xl mr-4">🎯</span><div><strong>Fokus:</strong> Pelaburan Jangka Panjang & Mampan</div></li>
+                        <li class="flex items-start"><span class="text-2xl mr-4">👥</span><div><strong>Sasaran:</strong> 12 Guru & 180 Pelajar Tingkatan 4</div></li>
+                        <li class="flex items-start"><span class="text-2xl mr-4">📚</span><div><strong>Subjek Teras:</strong> Bahasa Melayu & Sejarah</div></li>
+                        <li class="flex items-start"><span class="text-2xl mr-4">👩‍🏫</span><div><strong>Tenaga Pengajar:</strong> Guru yang dilatih khas (Guru Pembimbing)</div></li>
+                        <li class="flex items-start"><span class="text-2xl mr-4">⏳</span><div><strong>Tempoh:</strong> 4-5 Bulan (Fleksibel)</div></li>
+                    </ul>
+                </div>
+                <div class="bg-white p-8 rounded-2xl shadow-xl border">
+                    <h3 class="text-2xl font-bold text-amber-600 mb-4">Belanjawan: RM 27,840</h3>
+                    <div class="doughnut-container"><canvas id="akarIlmuBudgetChart"></canvas></div>
+                </div>
+                 <div class="lg:col-span-2 bg-white p-8 rounded-2xl shadow-xl border">
+                    <h3 class="text-2xl font-bold text-amber-600 mb-6">Garis Masa Pelaksanaan (Terkini)</h3>
+                    <div class="relative">
+                        <div class="timeline-item relative pb-8">
+                            <div class="flex items-center"><div class="flex-shrink-0 w-10 h-10 rounded-full bg-amber-600 text-white flex items-center justify-center font-bold z-10">1</div><div class="ml-4"><h4 class="text-xl font-bold">September 2025</h4><p class="text-slate-600">Fasa 1: Latihan Guru (ToT) & Sesi Pengenalan Pelajar.</p></div></div>
+                        </div>
+                        <div class="timeline-item relative pb-8">
+                            <div class="flex items-center"><div class="flex-shrink-0 w-10 h-10 rounded-full bg-amber-600 text-white flex items-center justify-center font-bold z-10">2</div><div class="ml-4"><h4 class="text-xl font-bold">Oktober 2025 - Januari 2026</h4><p class="text-slate-600">Fasa 2: Kelas bimbingan berterusan (1 sesi/minggu) untuk membina asas secara konsisten.</p></div></div>
+                        </div>
+                        <div class="timeline-item relative">
+                            <div class="flex items-center"><div class="flex-shrink-0 w-10 h-10 rounded-full bg-amber-600 text-white flex items-center justify-center font-bold z-10">3</div><div class="ml-4"><h4 class="text-xl font-bold">Februari 2026</h4><p class="text-slate-600">Fasa 3: Pemantauan & Penilaian impak awal berdasarkan prestasi semasa Tingkatan 5.</p></div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PAGE 4: PERBANDINGAN -->
+        <section id="page-comparison" class="page-content hidden">
+            <header class="text-center my-8">
+                <h2 class="text-4xl font-bold text-slate-900 leading-tight">Analisis Perbandingan Tiga Program</h2>
+                <p class="mt-4 max-w-3xl mx-auto text-lg text-slate-600">Penilaian strategik untuk membantu ORACO & JPNP membuat keputusan termaklum.</p>
+            </header>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div class="card-program bg-white p-8 rounded-2xl shadow-lg border border-slate-200 flex flex-col">
+                    <h3 class="text-2xl font-bold text-center text-blue-600">PRO-KOMOA</h3><p class="text-center font-semibold text-slate-500 mt-1">Tindakan Segera</p><div class="border-t my-4"></div>
+                    <ul class="space-y-4 text-slate-700 flex-grow">
+                        <li class="flex items-start"><span class="text-2xl mr-3">🎯</span><div><strong>Sasaran:</strong> Pelajar Tingkatan 5</div></li>
+                        <li class="flex items-start"><span class="text-2xl mr-3">👩‍🏫</span><div><strong>Pengajar:</strong> Guru Sedia Ada</div></li>
+                        <li class="flex items-start"><span class="text-2xl mr-3">💰</span><div><strong>Kos:</strong> ~ RM 34,740</div></li>
+                        <li class="flex items-start"><span class="text-2xl mr-3">⏳</span><div><strong>Masa:</strong> 2 Bulan (Intensif)</div></li>
+                        <li class="flex items-start"><span class="text-2xl mr-3">📈</span><div><strong>Impak:</strong> Jangka Pendek</div></li>
+                    </ul>
+                </div>
+                <div class="card-program bg-white p-8 rounded-2xl shadow-lg border border-slate-200 flex flex-col">
+                    <h3 class="text-2xl font-bold text-center text-purple-600">DIDIK JAYA</h3><p class="text-center font-semibold text-slate-500 mt-1">Impak Berganda</p><div class="border-t my-4"></div>
+                    <ul class="space-y-4 text-slate-700 flex-grow">
+                        <li class="flex items-start"><span class="text-2xl mr-3">🎯</span><div><strong>Sasaran:</strong> Guru & Pelajar Tingkatan 5</div></li>
+                        <li class="flex items-start"><span class="text-2xl mr-3">👩‍🏫</span><div><strong>Pengajar:</strong> Guru Dilatih Khas</div></li>
+                        <li class="flex items-start"><span class="text-2xl mr-3">💰</span><div><strong>Kos:</strong> ~ RM 39,360</div></li>
+                        <li class="flex items-start"><span class="text-2xl mr-3">⏳</span><div><strong>Masa:</strong> 2 Bulan (Intensif)</div></li>
+                        <li class="flex items-start"><span class="text-2xl mr-3">📈</span><div><strong>Impak:</strong> Jangka Sederhana</div></li>
+                    </ul>
+                </div>
+                <div class="card-program bg-white p-8 rounded-2xl shadow-xl border-4 border-amber-500 flex flex-col relative">
+                    <div class="absolute top-0 right-0 -mt-4 -mr-2"><span class="bg-amber-500 text-white text-xs font-bold px-3 py-1 rounded-full">PILIHAN TERBAIK</span></div>
+                    <h3 class="text-2xl font-bold text-center text-amber-600">AKAR ILMU</h3><p class="text-center font-semibold text-slate-500 mt-1">Pelaburan Jangka Panjang</p><div class="border-t my-4"></div>
+                    <ul class="space-y-4 text-slate-700 flex-grow">
+                        <li class="flex items-start"><span class="text-2xl mr-3">🎯</span><div><strong>Sasaran:</strong> Guru & Pelajar Tingkatan 4</div></li>
+                        <li class="flex items-start"><span class="text-2xl mr-3">👩‍🏫</span><div><strong>Pengajar:</strong> Guru Dilatih Khas</div></li>
+                        <li class="flex items-start"><span class="text-2xl mr-3">💰</span><div><strong>Kos:</strong> ~ RM 27,840</div></li>
+                        <li class="flex items-start"><span class="text-2xl mr-3">⏳</span><div><strong>Masa:</strong> 4-5 Bulan (Fleksibel)</div></li>
+                        <li class="flex items-start"><span class="text-2xl mr-3">📈</span><div><strong>Impak:</strong> Jangka Panjang & Mampan</div></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="mt-12 bg-white p-6 rounded-2xl shadow-lg border border-slate-100">
+                <h4 class="text-xl font-bold text-center mb-4">Perbandingan Kos Pelaksanaan</h4>
+                <div class="chart-container"><canvas id="costComparisonChart"></canvas></div>
+            </div>
+            <div class="mt-10 bg-amber-50 border-2 border-amber-200 rounded-2xl p-8">
+                <h4 class="text-2xl font-bold text-amber-800">Cadangan Pilihan Paling Efektif</h4>
+                <p class="text-amber-700 mt-3"><strong>Program AKAR ILMU</strong> dicadangkan sebagai pilihan utama. Dengan menyasarkan pelajar Tingkatan 4, program ini bersifat **proaktif**, bukan reaktif. Ia membolehkan pembinaan asas yang kukuh, melatih guru untuk impak berterusan, dan pada masa yang sama merupakan **pilihan yang paling bijak dari segi kewangan**. </p>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-slate-800 text-white mt-16">
+        <div class="container mx-auto px-6 py-8 text-center">
+            <p class="font-semibold">Portal Perbandingan & Butiran Program untuk ORACO & JPN Pahang</p>
+            <p class="text-sm text-slate-400 mt-2">&copy; 2025 Analisis Program Intervensi</p>
+        </div>
+    </footer>
+    
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const navButtons = document.querySelectorAll('.nav-button');
+        const pages = document.querySelectorAll('.page-content');
+        const chartState = {
+            comparison: false, proKomoa: false, didikJaya: false, akarIlmu: false
+        };
+
+        function switchPage(targetId) {
+            pages.forEach(page => page.classList.add('hidden'));
+            document.getElementById(targetId).classList.remove('hidden');
+
+            navButtons.forEach(button => {
+                button.classList.remove('active');
+                if (button.dataset.target === targetId) button.classList.add('active');
+            });
+
+            const chartInitializers = {
+                'page-comparison': { init: initComparisonChart, flag: 'comparison' },
+                'page-pro-komoa': { init: initProKomoaChart, flag: 'proKomoa' },
+                'page-didik-jaya': { init: initDidikJayaChart, flag: 'didikJaya' },
+                'page-akar-ilmu': { init: initAkarIlmuChart, flag: 'akarIlmu' }
+            };
+
+            const chartInfo = chartInitializers[targetId];
+            if (chartInfo && !chartState[chartInfo.flag]) {
+                chartInfo.init();
+                chartState[chartInfo.flag] = true;
+            }
+        }
+
+        navButtons.forEach(button => {
+            button.addEventListener('click', () => switchPage(button.dataset.target));
+        });
+
+        function createDoughnutChart(canvasId, labels, data, colors) {
+            const ctx = document.getElementById(canvasId).getContext('2d');
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Pecahan Belanjawan', data: data, backgroundColor: colors,
+                        borderColor: '#FFFFFF', borderWidth: 4, hoverOffset: 10
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { padding: 15, font: { size: 12 } } },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const value = context.parsed;
+                                    const total = context.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
+                                    const percentage = ((value / total) * 100).toFixed(1) + '%';
+                                    return `RM ${value.toLocaleString()} (${percentage})`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function initComparisonChart() {
+            const ctx = document.getElementById('costComparisonChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['PRO-KOMOA (Ting. 5)', 'DIDIK JAYA (Ting. 5)', 'AKAR ILMU (Ting. 4)'],
+                    datasets: [{
+                        label: 'Anggaran Kos (RM)', data: [34740, 39360, 27840],
+                        backgroundColor: ['#60A5FA', '#A78BFA', '#FBBF24'],
+                        borderWidth: 1, borderRadius: 5
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false, indexAxis: 'y',
+                    scales: { x: { beginAtZero: true, title: { display: true, text: 'Anggaran Kos (RM)' } } },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) { return `Anggaran Kos: RM ${context.parsed.x.toLocaleString()}`; }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function initProKomoaChart() {
+            createDoughnutChart('proKomoaBudgetChart', 
+                ['Makan & Minum Murid', 'Saguhati Guru', 'Bengkel & Latihan', 'Pengurusan Sekolah'],
+                [23040, 9600, 1500, 600],
+                ['#2563EB', '#60A5FA', '#93C5FD', '#BFDBFE']
+            );
+        }
+
+        function initDidikJayaChart() {
+            createDoughnutChart('didikJayaBudgetChart',
+                ['Makan & Minum Pelajar', 'Elaun Khas Guru', 'Latihan Guru', 'Pengurusan Sekolah'],
+                [23040, 11520, 3900, 900],
+                ['#7C3AED', '#A78BFA', '#C4B5FD', '#DDD6FE']
+            );
+        }
+
+        function initAkarIlmuChart() {
+            createDoughnutChart('akarIlmuBudgetChart',
+                ['Elaun Khas Guru', 'Snek Pelajar', 'Latihan Guru', 'Pengurusan Sekolah'],
+                [11520, 11520, 3900, 900],
+                ['#D97706', '#FBBF24', '#FCD34D', '#FEF3C7']
+            );
+        }
+
+        // Initialize the default page's chart
+        switchPage('page-pro-komoa');
+    });
+    </script>
+</body>
+</html>
